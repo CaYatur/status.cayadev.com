@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>cayadev.com — Uptime</title>
+  <title>cayadev.com — Durum</title>
   <link rel="icon" type="image/png" href="assets/CaYaDevSite.png">
 
   <style>
@@ -15,20 +15,18 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;background: linear-gradient(180deg,var(--bg-1),var(--bg-2)); color:#e6eef8;}
-    .container{max-width:1100px;margin:30px auto;padding:18px}
+    .container{max-width:1100px;margin:20px auto;padding:16px}
     .shell{
       background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
       border-radius:14px; overflow:hidden; box-shadow: 0 12px 50px rgba(2,6,23,.6);
       border:1px solid rgba(255,255,255,0.03);
     }
 
-    /* Top bar with big logo on left */
     .top {
-      display:flex; gap:18px; align-items:center; padding:18px 22px; background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
+      display:flex; gap:18px; align-items:center; padding:16px 20px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
     }
-    .brand {
-      display:flex; gap:14px; align-items:center; min-width:320px;
-    }
+    .brand { display:flex; gap:14px; align-items:center; min-width:320px; }
     .logo-wrap{
       width:92px; height:92px; border-radius:14px; overflow:hidden; flex:0 0 92px;
       background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
@@ -36,31 +34,36 @@
     }
     .logo-wrap img{width:86px;height:86px;object-fit:contain; display:block}
     .brand h1{font-size:20px;margin:0;color:#fff;letter-spacing:0.2px}
-    .brand p{margin:2px 0 0 0;color:var(--muted);font-size:13px}
 
-    /* Big status pill */
+    .actions { margin-left:auto; display:flex; gap:12px; align-items:center; }
+    .btn-site{
+      background: linear-gradient(90deg,var(--accent), #2fb8ff);
+      color:#022; padding:10px 14px; border-radius:10px; font-weight:700; text-decoration:none;
+      box-shadow: 0 8px 22px rgba(56,189,248,.12);
+    }
+
     .status-pill{
-      margin-left:auto;
-      display:flex; align-items:center; gap:14px; padding:12px 18px; border-radius:999px;
-      background: rgba(255,255,255,0.02); min-width:240px; justify-content:center;
+      display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:999px;
+      background: rgba(255,255,255,0.02); min-width:240px; justify-content:center; margin-top:12px;
     }
     .status-pill.ok{ background: linear-gradient(90deg, rgba(22,163,74,0.95), rgba(16,148,71,0.95)); color:#fff; }
     .status-pill.bad{ background: linear-gradient(90deg, rgba(239,68,68,0.95), rgba(220,38,38,0.95)); color:#fff; }
-    .status-pill .dot{width:14px;height:14px;border-radius:50%}
-    .status-pill .dot.ok{background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.25)}
-    .status-pill .text{font-weight:700;font-size:18px}
 
-    /* Main content layout */
-    .main{display:grid; grid-template-columns: 1fr 340px; gap:18px; padding:20px}
-    @media (max-width:960px){ .main{grid-template-columns:1fr} .brand{min-width:unset} .status-pill{margin-left:0} .logo-wrap{width:76px;height:76px} }
+    /* single-column main (aside removed) */
+    .main{display:block; padding:18px}
+    @media (max-width:960px){ .brand{min-width:unset} .logo-wrap{width:76px;height:76px} }
+    @media (max-width:640px){
+      .top{flex-direction:column;align-items:center;gap:12px;padding:14px}
+      .brand{flex-direction:column;align-items:center;text-align:center;min-width:unset}
+      .logo-wrap{width:120px;height:120px;border-radius:16px}
+      .logo-wrap img{width:110px;height:110px}
+      .actions{width:100%;justify-content:center}
+      .status-pill{width:100%; border-radius:12px; padding:12px; justify-content:center; min-width:unset; margin-top:6px}
+      .main{padding:14px; gap:12px}
+    }
 
-    /* Left: overview and history */
-    .card{
-      background:var(--card); padding:16px; border-radius:12px; border:1px solid var(--glass);
-    }
-    .overview{
-      display:flex; gap:12px; align-items:center;
-    }
+    .card{ background:var(--card); padding:14px; border-radius:12px; border:1px solid var(--glass); }
+    .overview{ display:flex; gap:12px; align-items:center; }
     .big-dot{width:20px;height:20px;border-radius:50%;background:var(--muted)}
     .big-dot.up{background:var(--ok);box-shadow:0 8px 28px rgba(22,163,74,.12)}
     .big-dot.down{background:var(--bad);box-shadow:0 8px 28px rgba(239,68,68,.12)}
@@ -68,25 +71,25 @@
     .meta{color:var(--muted);font-size:13px;margin-top:6px}
 
     .stats-grid{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
-    .stat{
-      flex:1 1 160px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); padding:12px; border-radius:10px;
-      min-width:140px; border:1px solid rgba(255,255,255,0.02);
-    }
+    .stat{ flex:1 1 160px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); padding:12px; border-radius:10px; min-width:140px; border:1px solid rgba(255,255,255,0.02); }
     .stat .label{color:var(--muted); font-size:12px}
     .stat .value{font-weight:700; font-size:18px; margin-top:6px}
 
-    .history{margin-top:12px; max-height:420px; overflow:auto; padding:8px; border-radius:8px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
-    .history .row{display:flex; justify-content:space-between; padding:10px; border-radius:8px}
+    /* History styles */
+    .history{margin-top:12px; max-height:520px; overflow:auto; padding:6px; border-radius:8px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
+    .history .row{display:flex; justify-content:space-between; padding:12px; border-radius:8px; align-items:center}
     .history .row:nth-child(odd){background:rgba(255,255,255,0.01)}
+    .history .row small{display:block;color:var(--muted);font-size:13px}
+    .history .row .state{font-weight:700}
     .reverted{opacity:.6; font-style:italic; color:var(--muted)}
 
-    /* Right: details & controls (minimal) */
-    .side {
-      display:flex; flex-direction:column; gap:12px;
-    }
-    .hint{color:var(--muted); font-size:13px}
-    .small-card{padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02)}
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#022; font-weight:700;text-decoration:none}
+    /* Compact list mode when more than 3 items */
+    .history-list{ list-style: disc inside; padding-left:18px; margin:0; }
+    .history-list li{ padding:8px 6px; border-bottom:1px solid rgba(255,255,255,0.02); font-size:14px; display:flex; justify-content:space-between; align-items:center; }
+    .history-list li:last-child{ border-bottom: none; }
+    .history-list .ts{ color:var(--muted); font-size:13px; margin-right:12px; white-space:nowrap; }
+    .history-list .st{ font-weight:700; }
+
     footer{padding:14px 18px;color:var(--muted);font-size:13px;text-align:center}
   </style>
 </head>
@@ -100,16 +103,11 @@
           </div>
           <div>
             <h1>cayadev.com</h1>
-            <p>Canlı erişilebilirlik durumu — otomatik kontroller</p>
           </div>
         </div>
 
-        <div id="statusPill" class="status-pill" aria-live="polite">
-          <div class="dot" id="pillDot" aria-hidden="true"></div>
-          <div>
-            <div class="text" id="pillText">Henüz kontrol edilmedi</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.85)" id="pillSub"></div>
-          </div>
+        <div class="actions" aria-hidden="false">
+          <a class="btn-site" href="https://cayadev.com" target="_blank" rel="noopener noreferrer">Siteye Git</a>
         </div>
       </div>
 
@@ -121,6 +119,14 @@
               <div>
                 <div id="stateText" class="status-text">Henüz kontrol edilmedi</div>
                 <div id="lastChecked" class="meta"></div>
+              </div>
+            </div>
+
+            <div class="status-pill" id="statusPill" aria-live="polite" style="margin-top:14px">
+              <div class="dot" id="pillDot" aria-hidden="true" style="width:14px;height:14px;border-radius:50%"></div>
+              <div>
+                <div class="text" id="pillText">Henüz kontrol edilmedi</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.85)" id="pillSub"></div>
               </div>
             </div>
 
@@ -143,46 +149,26 @@
               </div>
             </div>
 
+            <!-- historyBox will render either rows (<=3) or a compact bullet list (>3) with internal scroll -->
             <div class="history" id="historyBox" aria-label="Kontrol geçmişi"></div>
           </div>
         </div>
-
-        <aside class="side" aria-label="Detaylar">
-          <div class="small-card">
-            <div class="hint">Kontrol aralığı: sabit 60s. Proxy/URL arka planda sabitlenmiştir.</div>
-          </div>
-
-          <div class="small-card">
-            <div style="font-weight:700;margin-bottom:8px">False-positive koruması</div>
-            <div class="hint">Kısa süreli başarısızlıklar hızlı yeniden denemelerle doğrulanır; doğrulanan kısa hatalar "GERİ ALINDI" olarak işaretlenir ve istatistiklere dahil edilmez.</div>
-          </div>
-
-          <div class="small-card">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div class="hint">Son kontrolü yeniden başlat</div>
-              <a id="btnRefresh" class="btn" href="#" role="button">Kontrol Et</a>
-            </div>
-          </div>
-        </aside>
       </div>
 
-      <footer>Bu sayfa yalnızca cayadev.com erişilebilirliğini gösterir. Logoyu değiştirmek için assets/CaYaDev.png dosyasını değiştirin.</footer>
+      <footer>Bu sayfa yalnızca cayadev.com erişilebilirliğini gösterir.</footer>
     </div>
   </div>
 
   <script>
     (function(){
-      // — Ayarlar (gizli sayılabilecek sabitler)
       const TARGET = 'https://cayadev.com';
       const PROXY_BASE = 'https://api.allorigins.win/raw?url=';
       const INTERVAL_SECONDS = 60;
 
-      // False-positive koruması
       const QUICK_RETRIES = 2;
       const RETRY_DELAY_MS = 2500;
       const REVERT_WINDOW_MS = 5 * 60 * 1000;
 
-      // UI
       const pill = document.getElementById('statusPill');
       const pillText = document.getElementById('pillText');
       const pillSub = document.getElementById('pillSub');
@@ -195,9 +181,8 @@
       const lastStatusEl = document.getElementById('lastStatus');
       const savedEl = document.getElementById('saved');
       const historyBox = document.getElementById('historyBox');
-      const btnRefresh = document.getElementById('btnRefresh');
 
-      const STORAGE_KEY = 'uptime:cayadev:design-v2';
+      const STORAGE_KEY = 'uptime:cayadev:clean-v3';
       let history = loadHistory();
       let timer = null;
 
@@ -224,20 +209,46 @@
 
       function renderHistory(){
         historyBox.innerHTML = '';
-        history.forEach(r=>{
-          const row = document.createElement('div');
-          row.className = 'row' + (r.reverted ? ' reverted' : '');
-          const left = document.createElement('div');
-          left.innerHTML = `<small>${new Date(r.t).toLocaleString()}</small>`;
-          const right = document.createElement('div');
-          if(r.reverted){
-            right.innerHTML = `<span><strong>GERİ ALINDI</strong> ${r.status?('('+r.status+')'):''}</span>`;
-          } else {
-            right.innerHTML = r.ok ? `<span style="color:var(--ok)"><strong>AKTİF</strong> ${r.status?('('+r.status+')'):''}</span>` : `<span style="color:var(--bad)"><strong>AKTİF DEĞİL</strong> ${r.status?('('+r.status+')'):''}</span>`;
-          }
-          row.appendChild(left); row.appendChild(right);
-          historyBox.appendChild(row);
-        });
+
+        const items = history;
+        if(items.length > 3){
+          const ul = document.createElement('ul');
+          ul.className = 'history-list';
+          items.forEach(r=>{
+            const li = document.createElement('li');
+            const ts = document.createElement('span');
+            ts.className = 'ts';
+            ts.textContent = new Date(r.t).toLocaleString();
+            const st = document.createElement('span');
+            st.className = 'st';
+            if(r.reverted){
+              st.innerHTML = 'GERİ ALINDI' + (r.status ? ' ('+r.status+')' : '');
+              st.style.opacity = '0.7';
+            } else {
+              st.innerHTML = (r.ok ? '<span style="color:var(--ok)">AKTİF</span>' : '<span style="color:var(--bad)">AKTİF DEĞİL</span>') + (r.status ? ' ('+r.status+')' : '');
+            }
+            li.appendChild(ts);
+            li.appendChild(st);
+            ul.appendChild(li);
+          });
+          historyBox.appendChild(ul);
+        } else {
+          items.forEach(r=>{
+            const row = document.createElement('div');
+            row.className = 'row' + (r.reverted ? ' reverted' : '');
+            const left = document.createElement('div');
+            left.innerHTML = `<small>${new Date(r.t).toLocaleString()}</small>`;
+            const right = document.createElement('div');
+            right.className = 'state';
+            if(r.reverted){
+              right.innerHTML = `<span>GERİ ALINDI ${r.status?('('+r.status+')'):''}</span>`;
+            } else {
+              right.innerHTML = r.ok ? `<span style="color:var(--ok)"><strong>AKTİF</strong> ${r.status?('('+r.status+')'):''}</span>` : `<span style="color:var(--bad)"><strong>AKTİF DEĞİL</strong> ${r.status?('('+r.status+')'):''}</span>`;
+            }
+            row.appendChild(left); row.appendChild(right);
+            historyBox.appendChild(row);
+          });
+        }
 
         const counted = history.filter(h=>!h.reverted);
         totalEl.textContent = counted.length;
@@ -289,14 +300,11 @@
             return;
           }
 
-          // hızlı yeniden denemeler
           let final = null;
           for(let i=0;i<=QUICK_RETRIES;i++){
             const method = (i===QUICK_RETRIES) ? 'GET' : 'HEAD';
             const r = await tryFetch(method, controller.signal);
-            if(r.status !== 'err' || r.ok){
-              final = r; break;
-            }
+            if(r.status !== 'err' || r.ok){ final = r; break; }
             if(i<QUICK_RETRIES) await new Promise(r=>setTimeout(r, RETRY_DELAY_MS));
           }
 
@@ -325,15 +333,13 @@
 
       // init
       renderHistory();
-      btnRefresh.addEventListener('click', (e)=>{ e.preventDefault(); checkOnce(); });
       window.addEventListener('load', start);
       document.addEventListener('visibilitychange', ()=>{
         if(document.hidden){ if(timer){ clearInterval(timer); timer = null; } }
         else start();
       });
 
-      // console bilgi
-      console.info('Sayfa: geliştirilmiş tasarım + false-positive koruması aktif.');
+      console.info('Aside kaldırıldı; arayüz temizlendi.');
     })();
   </script>
 </body>
