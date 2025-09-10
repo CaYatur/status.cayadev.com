@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>cayadev.com — Uptime</title>
+
+  <!-- Favicon (sayfa ikonu) -->
+  <link rel="icon" type="image/png" href="/assets/CaYaDevSite.png">
+
+  <style>
+    :root{
+      --bg:#071022; --card:#0b1220; --muted:#9ca3af;
+      --ok:#16a34a; --bad:#ef4444; --accent:#38bdf8;
+      color:#e6eef8; font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#041126 0%, #071826 70%);}
+    .wrap{max-width:920px;margin:36px auto;padding:0 16px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      padding:0;border-radius:12px;box-shadow:0 10px 40px rgba(2,6,23,.6);
+      border:1px solid rgba(255,255,255,0.02);overflow:hidden;
+    }
+
+    /* Üstte büyük durum bar'ı */
+    .status-bar{
+      height:72px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:12px 20px;
+      color:#071022;
+      background:linear-gradient(90deg, rgba(255,255,255,0.06), transparent);
+      transition:background .25s, color .25s;
+    }
+    .status-bar .text{
+      font-weight:700;
+      font-size:22px;
+      letter-spacing:0.6px;
+    }
+    .status-bar .sub{
+      font-size:13px;
+      color:rgba(7,17,34,0.85);
+      margin-top:4px;
+      font-weight:600;
+    }
+
+    header{display:flex;align-items:center;gap:12px;padding:18px}
+    header img.logo{width:56px;height:56px;object-fit:contain;border-radius:8px}
+    h1{font-size:20px;margin:0;color:var(--muted)}
+    .muted{color:var(--muted);font-size:13px}
+    .content{padding:18px}
+
+    .status-row{display:flex;align-items:center;gap:16px;margin-top:4px}
+    .dot{width:18px;height:18px;border-radius:50%;background:var(--muted);box-shadow:0 4px 14px rgba(2,6,23,.6)}
+    .dot.up{background:var(--ok);box-shadow:0 6px 20px rgba(22,163,74,.14)}
+    .dot.down{background:var(--bad);box-shadow:0 6px 20px rgba(239,68,68,.14)}
+
+    .stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+    .stat{flex:1 1 160px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;min-width:140px}
+    .stat .label{color:var(--muted);font-size:12px}
+    .stat .value{font-weight:600;margin-top:6px;font-size:18px}
+    .history{margin-top:14px;max-height:280px;overflow:auto;border-radius:8px;padding:6px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+    .row{display:flex;justify-content:space-between;padding:8px;border-radius:6px}
+    .row:nth-child(odd){background:rgba(255,255,255,0.01)}
+    footer{margin-top:12px;color:var(--muted);font-size:12px;text-align:center}
+    a{color:var(--accent)}
+    @media (max-width:560px){
+      .stats{flex-direction:column}
+      header{flex-direction:row;align-items:center;gap:10px}
+      .status-bar{height:64px;padding:10px}
+      .status-bar .text{font-size:18px}
+    }
+
+    /* Yeşil ve kırmızı bar stilleri (durum güncellendiğinde değişecek) */
+    .status-ok{ background: linear-gradient(90deg, rgba(22,163,74,0.95), rgba(16,148,71,0.95)); color: #fff; }
+    .status-bad{ background: linear-gradient(90deg, rgba(239,68,68,0.95), rgba(220,38,38,0.95)); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-live="polite">
+      <!-- Büyük durum barı: AKTİF / AKTİF DEĞİL -->
+      <div id="statusBar" class="status-bar" aria-hidden="false">
+        <div>
+          <div id="statusBarText" class="text">Henüz kontrol edilmedi</div>
+          <div id="statusBarSub" class="sub" style="display:none">cayadev.com erişilebilirliği</div>
+        </div>
+      </div>
+
+      <header>
+        <!-- Logo görüntüsü (CaYaDev.png) -->
+        <img src="/assets/CaYaDev.png" alt="CaYaDev logo" class="logo" onerror="this.style.display='none'">
+        <div>
+          <h1>cayadev.com</h1>
+          <div class="muted">Canlı erişilebilirlik — yalnızca görüntüleme</div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="status-row" aria-hidden="false">
+          <div class="dot" id="dot" aria-hidden="true"></div>
+          <div>
+            <div id="stateText"><small class="muted">Henüz kontrol edilmedi</small></div>
+            <div class="muted" id="lastChecked"></div>
+          </div>
+        </div>
+
+        <div class="stats" aria-hidden="false">
+          <div class="stat">
+            <div class="label">Toplam Kontrol</div>
+            <div class="value" id="total">0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Çalışma Oranı</div>
+            <div class="value" id="uptime">—</div>
+          </div>
+          <div class="stat">
+            <div class="label">En Son Durum</div>
+            <div class="value" id="lastStatus">—</div>
+          </div>
+          <div class="stat">
+            <div class="label">Kayıt Sayısı</div>
+            <div class="value" id="saved">0</div>
+          </div>
+        </div>
+
+        <div class="history" id="historyBox" aria-label="Kontrol geçmişi"></div>
+
+      </div>
+      <footer id="footerNote" aria-hidden="true" style="display:none">
+        Bu sayfa yalnızca cayadev.com'un erişilebilirliğini gösterir.
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Sabit ayarlar (kullanıcıya görünmez)
+      const TARGET = 'https://cayadev.com';
+      const PROXY_BASE = 'https://api.allorigins.win/raw?url='; // proxy (gizli)
+      const INTERVAL_SECONDS = 60; // sabit 60s
+
+      // UI elemanları
+      const statusBar = document.getElementById('statusBar');
+      const statusBarText = document.getElementById('statusBarText');
+      const statusBarSub = document.getElementById('statusBarSub');
+      const dot = document.getElementById('dot');
+      const stateText = document.getElementById('stateText');
+      const lastChecked = document.getElementById('lastChecked');
+      const totalEl = document.getElementById('total');
+      const uptimeEl = document.getElementById('uptime');
+      const lastStatusEl = document.getElementById('lastStatus');
+      const historyBox = document.getElementById('historyBox');
+      const savedEl = document.getElementById('saved');
+
+      const STORAGE_KEY = 'uptime:cayadev:fixed';
+      let timer = null;
+      let history = loadHistory();
+
+      // Yerel kayıt yükle / kaydet
+      function loadHistory(){
+        try{ const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; } catch(e){ return []; }
+      }
+      function saveHistory(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(history)); }catch(e){}; savedEl.textContent = history.length; }
+
+      // Kayıt ekle
+      function pushRecord(ok, status){
+        const rec = { t: new Date().toISOString(), ok: !!ok, status: status || null };
+        history.unshift(rec);
+        if(history.length>1000) history.length = 1000;
+        saveHistory();
+        renderHistory();
+      }
+
+      // Geçmişi göster (kullanıcılara Türkçe)
+      function renderHistory(){
+        historyBox.innerHTML = '';
+        history.forEach(r=>{
+          const div = document.createElement('div');
+          div.className = 'row';
+          const left = document.createElement('div');
+          left.innerHTML = `<small>${new Date(r.t).toLocaleString()}</small>`;
+          const right = document.createElement('div');
+          // "AKTİF" / "AKTİF DEĞİL" şeklinde göster
+          right.innerHTML = r.ok ? `<span style="color:var(--ok)"><strong>AKTİF</strong> ${r.status?('('+r.status+')'):''}</span>` : `<span style="color:var(--bad)"><strong>AKTİF DEĞİL</strong> ${r.status?('('+r.status+')'):''}</span>`;
+          div.appendChild(left); div.appendChild(right);
+          historyBox.appendChild(div);
+        });
+        totalEl.textContent = history.length;
+        const ups = history.filter(h=>h.ok).length;
+        uptimeEl.textContent = history.length ? Math.round(ups/history.length*100)+'%' : '—';
+        lastStatusEl.textContent = history.length ? (history[0].ok ? 'AKTİF' : 'AKTİF DEĞİL') : '—';
+      }
+
+      // Genel durum (üstteki büyük bar) güncelle
+      function setStatusVisual(ok, status){
+        // statusBar'ı yeşil veya kırmızı yap
+        if(ok){
+          statusBar.classList.remove('status-bad');
+          statusBar.classList.add('status-ok');
+          statusBarText.textContent = 'AKTİF';
+          statusBarSub.style.display = 'block';
+          statusBarSub.textContent = 'cayadev.com erişilebilir';
+          dot.className = 'dot up';
+          stateText.innerHTML = `<strong style="color:var(--ok)">AKTİF</strong> ${status?('('+status+')'):''}`;
+        } else {
+          statusBar.classList.remove('status-ok');
+          statusBar.classList.add('status-bad');
+          statusBarText.textContent = 'AKTİF DEĞİL';
+          statusBarSub.style.display = 'block';
+          statusBarSub.textContent = 'cayadev.com erişilemiyor';
+          dot.className = 'dot down';
+          stateText.innerHTML = `<strong style="color:var(--bad)">AKTİF DEĞİL</strong> ${status?('('+status+')'):''}`;
+        }
+        lastChecked.textContent = 'Son kontrol: ' + new Date().toLocaleString();
+      }
+
+      function buildUrl(){
+        return PROXY_BASE + encodeURIComponent(TARGET);
+      }
+
+      // Erişilebilirlik kontrolü: önce HEAD, sonra GET fallback
+      async function checkOnce(){
+        const url = buildUrl();
+        const controller = new AbortController();
+        const timeout = setTimeout(()=>controller.abort(), 15000);
+
+        async function tryFetch(method){
+          try{
+            const res = await fetch(url, { method, cache: 'no-store', signal: controller.signal });
+            return { ok: res.ok, status: res.status };
+          }catch(err){
+            return { ok: false, status: 'err' };
+          }
+        }
+
+        try{
+          const headResult = await tryFetch('HEAD');
+          if(headResult.status !== 'err' && typeof headResult.status === 'number'){
+            clearTimeout(timeout);
+            setStatusVisual(headResult.ok, headResult.status);
+            pushRecord(headResult.ok, headResult.status);
+            return;
+          }
+          const getResult = await tryFetch('GET');
+          clearTimeout(timeout);
+          setStatusVisual(getResult.ok, getResult.status);
+          pushRecord(getResult.ok, getResult.status);
+        }catch(e){
+          clearTimeout(timeout);
+          setStatusVisual(false, 'err');
+          pushRecord(false, 'err');
+        }
+      }
+
+      function startMonitoring(){
+        if(timer) clearInterval(timer);
+        checkOnce(); // hemen kontrol et
+        timer = setInterval(checkOnce, INTERVAL_SECONDS * 1000);
+      }
+
+      // Başlangıç
+      renderHistory();
+      savedEl.textContent = history.length;
+      window.addEventListener('load', startMonitoring);
+
+      // Sekme gizliyken kontrolü durdur / görünür olunca devam ettir
+      document.addEventListener('visibilitychange', ()=>{
+        if(document.hidden){
+          if(timer){ clearInterval(timer); timer = null; }
+        } else {
+          startMonitoring();
+        }
+      });
+
+      // Not: Tüm metinler Türkçe yapıldı, kullanıcıya URL/proxy/aralık görünmüyor.
+    })();
+  </script>
+</body>
+</html>
