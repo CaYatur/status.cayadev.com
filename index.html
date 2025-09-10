@@ -1,4 +1,13 @@
 <!doctype html>
+<!-- 
+  CaYaDev Status Page - Uptime Monitoring
+  
+  Logo files used:
+  - assets/CaYaDev.png (current: 288x38px) - main logo, recommended size: 256x256px for better display
+  - assets/CaYaDevSite.png (current: 200x200px) - favicon, works well at current size
+  
+  Replace these files with your actual logos maintaining the same filenames.
+-->
 <html lang="tr">
 <head>
   <meta charset="utf-8" />
@@ -6,75 +15,281 @@
   <title>cayadev.com — Uptime</title>
 
   <!-- Favicon (sayfa ikonu) -->
-  <link rel="icon" type="image/png" href="/assets/CaYaDevSite.png">
+  <link rel="icon" type="image/png" href="assets/CaYaDevSite.png">
 
   <style>
     :root{
       --bg:#071022; --card:#0b1220; --muted:#9ca3af;
       --ok:#16a34a; --bad:#ef4444; --accent:#38bdf8;
-      color:#e6eef8; font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      --text-primary:#f8fafc; --text-secondary:#cbd5e1;
+      --shadow-sm:0 4px 12px rgba(2,6,23,.3);
+      --shadow-lg:0 12px 48px rgba(2,6,23,.7);
+      --border-subtle:rgba(255,255,255,0.08);
+      color:var(--text-primary); 
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
     }
     html,body{height:100%;margin:0;background:linear-gradient(180deg,#041126 0%, #071826 70%);}
-    .wrap{max-width:920px;margin:36px auto;padding:0 16px}
+    .wrap{max-width:1024px;margin:24px auto;padding:0 20px}
     .card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-      padding:0;border-radius:12px;box-shadow:0 10px 40px rgba(2,6,23,.6);
-      border:1px solid rgba(255,255,255,0.02);overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      padding:0;border-radius:16px;box-shadow:var(--shadow-lg);
+      border:1px solid var(--border-subtle);overflow:hidden;
+      backdrop-filter:blur(10px);
     }
 
-    /* Üstte büyük durum bar'ı */
+    /* Üstte büyük durum bar'ı - daha geniş ve belirgin */
     .status-bar{
-      height:72px;
+      height:88px;
       display:flex;
       align-items:center;
-      gap:16px;
-      padding:12px 20px;
+      gap:20px;
+      padding:16px 32px;
       color:#071022;
-      background:linear-gradient(90deg, rgba(255,255,255,0.06), transparent);
-      transition:background .25s, color .25s;
+      background:linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      transition:all .3s ease;
+      border-bottom:1px solid var(--border-subtle);
     }
     .status-bar .text{
-      font-weight:700;
-      font-size:22px;
-      letter-spacing:0.6px;
+      font-weight:800;
+      font-size:28px;
+      letter-spacing:0.8px;
+      text-shadow:0 2px 8px rgba(0,0,0,0.3);
     }
     .status-bar .sub{
-      font-size:13px;
-      color:rgba(7,17,34,0.85);
-      margin-top:4px;
+      font-size:15px;
+      color:rgba(7,17,34,0.9);
+      margin-top:6px;
       font-weight:600;
+      letter-spacing:0.3px;
     }
 
-    header{display:flex;align-items:center;gap:12px;padding:18px}
-    header img.logo{width:56px;height:56px;object-fit:contain;border-radius:8px}
-    h1{font-size:20px;margin:0;color:var(--muted)}
-    .muted{color:var(--muted);font-size:13px}
-    .content{padding:18px}
+    /* Header ile büyük logo */
+    header{
+      display:flex;
+      align-items:center;
+      gap:24px;
+      padding:32px;
+      background:linear-gradient(135deg, rgba(255,255,255,0.02), transparent);
+    }
+    header img.logo{
+      width:112px;
+      height:112px;
+      object-fit:contain;
+      border-radius:12px;
+      box-shadow:var(--shadow-sm);
+      border:2px solid var(--border-subtle);
+      background:rgba(255,255,255,0.05);
+      padding:8px;
+    }
+    .header-content{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    h1{
+      font-size:32px;
+      margin:0 0 8px 0;
+      color:var(--text-primary);
+      font-weight:700;
+      letter-spacing:-0.5px;
+    }
+    .header-subtitle{
+      color:var(--text-secondary);
+      font-size:16px;
+      font-weight:500;
+      margin:0;
+    }
+    .muted{color:var(--muted);font-size:14px}
+    .content{padding:32px}
 
-    .status-row{display:flex;align-items:center;gap:16px;margin-top:4px}
-    .dot{width:18px;height:18px;border-radius:50%;background:var(--muted);box-shadow:0 4px 14px rgba(2,6,23,.6)}
-    .dot.up{background:var(--ok);box-shadow:0 6px 20px rgba(22,163,74,.14)}
-    .dot.down{background:var(--bad);box-shadow:0 6px 20px rgba(239,68,68,.14)}
+    .status-row{
+      display:flex;
+      align-items:center;
+      gap:20px;
+      margin-bottom:24px;
+      padding:20px;
+      background:rgba(255,255,255,0.03);
+      border-radius:12px;
+      border:1px solid var(--border-subtle);
+    }
+    .dot{
+      width:24px;
+      height:24px;
+      border-radius:50%;
+      background:var(--muted);
+      box-shadow:var(--shadow-sm);
+      flex-shrink:0;
+    }
+    .dot.up{
+      background:var(--ok);
+      box-shadow:0 8px 24px rgba(22,163,74,.2);
+    }
+    .dot.down{
+      background:var(--bad);
+      box-shadow:0 8px 24px rgba(239,68,68,.2);
+    }
+    .status-info{
+      flex:1;
+    }
+    .status-info .status-text{
+      font-size:18px;
+      font-weight:600;
+      margin-bottom:4px;
+    }
+    .status-info .last-check{
+      color:var(--text-secondary);
+      font-size:14px;
+    }
 
-    .stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-    .stat{flex:1 1 160px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;min-width:140px}
-    .stat .label{color:var(--muted);font-size:12px}
-    .stat .value{font-weight:600;margin-top:6px;font-size:18px}
-    .history{margin-top:14px;max-height:280px;overflow:auto;border-radius:8px;padding:6px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
-    .row{display:flex;justify-content:space-between;padding:8px;border-radius:6px}
-    .row:nth-child(odd){background:rgba(255,255,255,0.01)}
-    footer{margin-top:12px;color:var(--muted);font-size:12px;text-align:center}
-    a{color:var(--accent)}
-    @media (max-width:560px){
-      .stats{flex-direction:column}
-      header{flex-direction:row;align-items:center;gap:10px}
-      .status-bar{height:64px;padding:10px}
-      .status-bar .text{font-size:18px}
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+      gap:20px;
+      margin-bottom:32px;
+    }
+    .stat{
+      background:rgba(255,255,255,0.04);
+      padding:20px;
+      border-radius:12px;
+      border:1px solid var(--border-subtle);
+      transition:all 0.2s ease;
+    }
+    .stat:hover{
+      background:rgba(255,255,255,0.06);
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-sm);
+    }
+    .stat .label{
+      color:var(--text-secondary);
+      font-size:13px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      margin-bottom:8px;
+    }
+    .stat .value{
+      font-weight:700;
+      font-size:24px;
+      color:var(--text-primary);
+      line-height:1.2;
+    }
+    
+    .history{
+      margin-top:0;
+      max-height:320px;
+      overflow:auto;
+      border-radius:12px;
+      padding:8px;
+      background:rgba(255,255,255,0.02);
+      border:1px solid var(--border-subtle);
+    }
+    .history::-webkit-scrollbar{
+      width:8px;
+    }
+    .history::-webkit-scrollbar-track{
+      background:rgba(255,255,255,0.05);
+      border-radius:4px;
+    }
+    .history::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,0.2);
+      border-radius:4px;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 16px;
+      border-radius:8px;
+      margin-bottom:4px;
+      transition:background 0.15s ease;
+    }
+    .row:nth-child(odd){
+      background:rgba(255,255,255,0.02);
+    }
+    .row:hover{
+      background:rgba(255,255,255,0.05);
+    }
+    .row .time{
+      color:var(--text-secondary);
+      font-size:13px;
+      font-weight:500;
+    }
+    .row .status{
+      font-weight:600;
+      font-size:14px;
+    }
+    
+    footer{
+      margin-top:20px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      padding:16px;
+      border-top:1px solid var(--border-subtle);
+    }
+    a{color:var(--accent);text-decoration:none;transition:color 0.2s ease;}
+    a:hover{color:#60a5fa;}
+    
+    /* Mobile responsive */
+    @media (max-width:768px){
+      .wrap{margin:16px auto;padding:0 16px;}
+      .stats{grid-template-columns:1fr;gap:16px;}
+      header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:16px;
+        padding:24px;
+      }
+      header img.logo{
+        width:96px;
+        height:96px;
+        align-self:flex-start;
+      }
+      .header-content{
+        align-self:stretch;
+      }
+      h1{font-size:24px;}
+      .header-subtitle{font-size:15px;}
+      .status-bar{
+        height:76px;
+        padding:12px 20px;
+      }
+      .status-bar .text{font-size:22px;}
+      .status-bar .sub{font-size:14px;}
+      .content{padding:24px;}
+      .status-row{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+      }
+      .row{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:4px;
+      }
+    }
+    
+    @media (max-width:480px){
+      header{padding:20px;}
+      header img.logo{width:80px;height:80px;}
+      h1{font-size:20px;}
+      .content{padding:20px;}
+      .stats{grid-template-columns:1fr;}
+      .stat{padding:16px;}
     }
 
     /* Yeşil ve kırmızı bar stilleri (durum güncellendiğinde değişecek) */
-    .status-ok{ background: linear-gradient(90deg, rgba(22,163,74,0.95), rgba(16,148,71,0.95)); color: #fff; }
-    .status-bad{ background: linear-gradient(90deg, rgba(239,68,68,0.95), rgba(220,38,38,0.95)); color: #fff; }
+    .status-ok{ 
+      background: linear-gradient(135deg, rgba(22,163,74,0.95), rgba(16,148,71,0.95)); 
+      color: #fff; 
+      border-bottom-color: rgba(22,163,74,0.3);
+    }
+    .status-bad{ 
+      background: linear-gradient(135deg, rgba(239,68,68,0.95), rgba(220,38,38,0.95)); 
+      color: #fff; 
+      border-bottom-color: rgba(239,68,68,0.3);
+    }
   </style>
 </head>
 <body>
@@ -90,19 +305,19 @@
 
       <header>
         <!-- Logo görüntüsü (CaYaDev.png) -->
-        <img src="/assets/CaYaDev.png" alt="CaYaDev logo" class="logo" onerror="this.style.display='none'">
-        <div>
+        <img src="assets/CaYaDev.png" alt="CaYaDev logo" class="logo" onerror="this.style.display='none'">
+        <div class="header-content">
           <h1>cayadev.com</h1>
-          <div class="muted">Canlı erişilebilirlik — yalnızca görüntüleme</div>
+          <div class="header-subtitle">Canlı erişilebilirlik — yalnızca görüntüleme</div>
         </div>
       </header>
 
       <div class="content">
         <div class="status-row" aria-hidden="false">
           <div class="dot" id="dot" aria-hidden="true"></div>
-          <div>
-            <div id="stateText"><small class="muted">Henüz kontrol edilmedi</small></div>
-            <div class="muted" id="lastChecked"></div>
+          <div class="status-info">
+            <div class="status-text" id="stateText"><small class="muted">Henüz kontrol edilmedi</small></div>
+            <div class="last-check muted" id="lastChecked"></div>
           </div>
         </div>
 
@@ -180,8 +395,10 @@
           const div = document.createElement('div');
           div.className = 'row';
           const left = document.createElement('div');
-          left.innerHTML = `<small>${new Date(r.t).toLocaleString()}</small>`;
+          left.className = 'time';
+          left.textContent = new Date(r.t).toLocaleString();
           const right = document.createElement('div');
+          right.className = 'status';
           // "AKTİF" / "AKTİF DEĞİL" şeklinde göster
           right.innerHTML = r.ok ? `<span style="color:var(--ok)"><strong>AKTİF</strong> ${r.status?('('+r.status+')'):''}</span>` : `<span style="color:var(--bad)"><strong>AKTİF DEĞİL</strong> ${r.status?('('+r.status+')'):''}</span>`;
           div.appendChild(left); div.appendChild(right);
